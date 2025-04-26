@@ -1,2 +1,5 @@
 /gutenberg_books
 /cleaned_books
+/tokenized_books
+/frequencies
+/word_frequencies.csv

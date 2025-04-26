@@ -3,6 +3,14 @@ import re
 import string
 import requests
 from tqdm import tqdm
+import nltk
+#nltk.download('punkt')
+from nltk.tokenize import RegexpTokenizer
+from collections import Counter
+import csv
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
 
 class GutenbergDownloader:
     def __init__(self, ebook_ids, save_dir="gutenberg_books"):
@@ -70,6 +78,106 @@ class GutenbergDownloader:
         else:
             print(f"⚠️ Original file not found: {original_path}")
 
+    def tokenize_text(self, text):
+     """Split cleaned text into tokens (words)."""
+     tokenizer = RegexpTokenizer(r'\w+')
+     tokens = tokenizer.tokenize(text)
+     return tokens
+    
+    def tokenize_all_books(self, cleaned_dir="cleaned_books", tokenized_dir="tokenized_books"):
+      os.makedirs(tokenized_dir, exist_ok=True)
+      print("🪄 Tokenizing all cleaned books...")
+
+      for ebook_id in tqdm(self.ebook_ids, desc="Tokenizing books"):
+        cleaned_path = os.path.join(cleaned_dir, f"cleaned_{ebook_id}.txt")
+        tokenized_path = os.path.join(tokenized_dir, f"tokenized_{ebook_id}.txt")
+
+        if os.path.exists(cleaned_path):
+            with open(cleaned_path, "r", encoding="utf-8") as infile:
+                cleaned_text = infile.read()
+                tokens = self.tokenize_text(cleaned_text)
+
+            with open(tokenized_path, "w", encoding="utf-8") as outfile:
+                outfile.write(" ".join(tokens))
+        else:
+            print(f"⚠️ Cleaned file not found: {cleaned_path}")
+
+    def calculate_word_frequencies(self, tokenized_dir="tokenized_books", freq_dir="frequencies"):
+      os.makedirs(freq_dir, exist_ok=True)
+      print("📊 Calculating word frequencies for all tokenized books...")
+
+      for ebook_id in tqdm(self.ebook_ids, desc="Calculating frequencies"):
+        tokenized_path = os.path.join(tokenized_dir, f"tokenized_{ebook_id}.txt")
+        freq_path = os.path.join(freq_dir, f"freq_{ebook_id}.txt")
+
+        if os.path.exists(tokenized_path):
+            with open(tokenized_path, "r", encoding="utf-8") as infile:
+                tokens = infile.read().split()
+
+            # Count word frequencies
+            word_freq = Counter(tokens)
+
+            # Save frequencies
+            with open(freq_path, "w", encoding="utf-8") as outfile:
+                for word, freq in word_freq.most_common():
+                    outfile.write(f"{word}\t{freq}\n")
+        else:
+            print(f"⚠️ Tokenized file not found: {tokenized_path}") 
+
+    def calculate_word_frequencies_csv_file(self, tokenized_dir="tokenized_books", output_csv="word_frequencies.csv"):
+        print("🧮 Calculating word frequencies across all tokenized books...")
+        all_tokens = []
+
+        # Read all tokenized files
+        for ebook_id in tqdm(self.ebook_ids, desc="Reading tokenized books"):
+            tokenized_path = os.path.join(tokenized_dir, f"tokenized_{ebook_id}.txt")
+
+            if os.path.exists(tokenized_path):
+                with open(tokenized_path, "r", encoding="utf-8") as infile:
+                    tokens = infile.read().split()
+                    all_tokens.extend(tokens)
+            else:
+                print(f"⚠️ Tokenized file not found: {tokenized_path}")
+
+        # Count frequencies
+        counter = Counter(all_tokens)
+
+        # Sort by frequency (high to low)
+        most_common = counter.most_common()
+
+        # Add RANK
+        ranked_words = [(rank + 1, word, freq) for rank, (word, freq) in enumerate(most_common)]
+
+        # Save to CSV
+        output_path = os.path.join(tokenized_dir, output_csv)
+        os.makedirs(tokenized_dir, exist_ok=True)
+
+        with open(output_path, "w", newline="", encoding="utf-8") as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(["Rank", "Word", "Frequency"])
+            writer.writerows(ranked_words)
+
+        print(f"✅ Word frequencies saved successfully to {output_path}")
+    
+
+
+    def plot_zipfs_law(file_path):
+    # Load your word frequencies
+      df=pd.read_csv("word_frequencies.csv")
+
+    # Extract rank and frequency
+      ranks = df['Rank']
+      frequencies = df['Frequency']
+
+    # Plot
+      plt.figure(figsize=(10, 6))
+      plt.plot(ranks, frequencies, linestyle='-', color='blue')
+
+      plt.xlabel('Rank')
+      plt.ylabel('Frequency')
+      plt.title('Word Frequency vs Rank (Zipf\'s Law)')
+      plt.grid(True)
+      plt.show()
 
 # Example Usage:
 if __name__ == "__main__":
@@ -80,5 +188,6 @@ if __name__ == "__main__":
     ]
 
     downloader = GutenbergDownloader(ebook_ids)
-    downloader.download_all_books()
-    downloader.clean_all_books()
+    #downloader.download_all_books()
+    #downloader.clean_all_books()
+    downloader.tokenize_all_books()
