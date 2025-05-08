@@ -161,7 +161,7 @@ class GutenbergDownloader:
     
 
 
-    def plot_zipfs_law(file_path):
+    def plot_zipfs_law(self):
     # Load your word frequencies
       df=pd.read_csv("word_frequencies.csv")
 
@@ -170,13 +170,36 @@ class GutenbergDownloader:
       frequencies = df['Frequency']
 
     # Plot
-      plt.figure(figsize=(10, 6))
+      plt.figure(figsize=(8, 4))
       plt.plot(ranks, frequencies, linestyle='-', color='blue')
 
       plt.xlabel('Rank')
       plt.ylabel('Frequency')
       plt.title('Word Frequency vs Rank (Zipf\'s Law)')
       plt.grid(True)
+      plt.show()
+      #Detail graph
+      df_10=df[df['Rank']<100]
+      df_20=df[df['Rank']<200]
+      df_100=df[df['Rank']<500]
+      fig, axes=plt.subplots(3,1, figsize=(8,10))
+      fig.suptitle("Rank Vs Frequency Analysis", fontsize=16, fontweight='bold')
+      fig.patch.set_edgecolor('black')  # Border color
+      fig.patch.set_linewidth(3)
+      axes[0].plot(df_10['Rank'],df_10['Frequency'], color='b',ls='-')
+      axes[0].set_title("Zip's Law for Top 100 Words", fontweight='bold')
+      axes[1].plot(df_20['Rank'],df_20['Frequency'], color='b',ls='-')
+      axes[1].set_title("Zip's Law for Top 200 words",fontweight='bold')
+      axes[2].plot(df_100['Rank'], df_100['Frequency'], color='b',ls='-')
+      axes[2].set_title("Zip's Law for Top 500 words", fontweight='bold')
+      for ax in axes:
+          ax.set_xlabel("Rank")
+          ax.set_ylabel("Frequency")
+          ax.legend()
+          ax.grid(True)
+    
+      
+      plt.tight_layout()
       plt.show()
 
 # Example Usage:
