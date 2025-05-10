@@ -11,12 +11,12 @@ This project explores and validates **Zipf's Law** using a collection of text fi
 
 ##  Visualization
 
-- The plot confirming Zipf’s Law is located in the **`notebook_visualization.ipynb`** folder.
+- The plot confirming Zipf’s Law is located in the **`notebook_visualization.ipynb`** notebook folder.
 - Check the notebook for step-by-step insights and the final graph.
 
 ##  Project Files
 
-- `Text_processing.txt`: Contains the **entire codebase** — from text preprocessing to frequency analysis and ranking.
+- `Text_processing.py`: Contains the **entire codebase** — from text preprocessing to frequency analysis and ranking.
 - `notebooks`: Includes the **Zipf’s Law visualization notebook**.
 - `cleaned_books/`, `tokenized_books/`: Processed text files.
 - `word_frequencies.csv`: Ranked word frequency data used for visualization.
