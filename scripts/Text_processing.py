@@ -33,12 +33,12 @@ class GutenbergDownloader:
                 f.write(response.text)
             return True
         else:
-            print(f"⚠️ Failed to download book ID {ebook_id}")
+            print(f" Failed to download book ID {ebook_id}")
             return False
 
     def download_all_books(self):
         """Download all books in the list."""
-        print(f"📥 Starting download of {len(self.ebook_ids)} books...")
+        print(f" Starting download of {len(self.ebook_ids)} books...")
         for ebook_id in tqdm(self.ebook_ids, desc="Downloading books"):
             self.download_book(ebook_id)
     
@@ -62,7 +62,7 @@ class GutenbergDownloader:
     
     def clean_all_books(self, cleaned_dir="cleaned_books"):
       os.makedirs(cleaned_dir, exist_ok=True)
-      print("🧹 Cleaning all downloaded books...")
+      print(" Cleaning all downloaded books...")
 
       for ebook_id in tqdm(self.ebook_ids, desc="Cleaning books"):
         original_path = os.path.join(self.save_dir, f"book_{ebook_id}.txt")
@@ -76,7 +76,7 @@ class GutenbergDownloader:
             with open(cleaned_path, "w", encoding="utf-8") as outfile:
                 outfile.write(cleaned_text)
         else:
-            print(f"⚠️ Original file not found: {original_path}")
+            print(f" Original file not found: {original_path}")
 
     def tokenize_text(self, text):
      """Split cleaned text into tokens (words)."""
@@ -86,7 +86,7 @@ class GutenbergDownloader:
     
     def tokenize_all_books(self, cleaned_dir="cleaned_books", tokenized_dir="tokenized_books"):
       os.makedirs(tokenized_dir, exist_ok=True)
-      print("🪄 Tokenizing all cleaned books...")
+      print("Tokenizing all cleaned books...")
 
       for ebook_id in tqdm(self.ebook_ids, desc="Tokenizing books"):
         cleaned_path = os.path.join(cleaned_dir, f"cleaned_{ebook_id}.txt")
@@ -100,11 +100,11 @@ class GutenbergDownloader:
             with open(tokenized_path, "w", encoding="utf-8") as outfile:
                 outfile.write(" ".join(tokens))
         else:
-            print(f"⚠️ Cleaned file not found: {cleaned_path}")
+            print(f" Cleaned file not found: {cleaned_path}")
 
     def calculate_word_frequencies(self, tokenized_dir="tokenized_books", freq_dir="frequencies"):
       os.makedirs(freq_dir, exist_ok=True)
-      print("📊 Calculating word frequencies for all tokenized books...")
+      print(" Calculating word frequencies for all tokenized books...")
 
       for ebook_id in tqdm(self.ebook_ids, desc="Calculating frequencies"):
         tokenized_path = os.path.join(tokenized_dir, f"tokenized_{ebook_id}.txt")
@@ -122,10 +122,10 @@ class GutenbergDownloader:
                 for word, freq in word_freq.most_common():
                     outfile.write(f"{word}\t{freq}\n")
         else:
-            print(f"⚠️ Tokenized file not found: {tokenized_path}") 
+            print(f" Tokenized file not found: {tokenized_path}") 
 
     def calculate_word_frequencies_csv_file(self, tokenized_dir="tokenized_books", output_csv="word_frequencies.csv"):
-        print("🧮 Calculating word frequencies across all tokenized books...")
+        print(" Calculating word frequencies across all tokenized books...")
         all_tokens = []
 
         # Read all tokenized files
@@ -137,7 +137,7 @@ class GutenbergDownloader:
                     tokens = infile.read().split()
                     all_tokens.extend(tokens)
             else:
-                print(f"⚠️ Tokenized file not found: {tokenized_path}")
+                print(f" Tokenized file not found: {tokenized_path}")
 
         # Count frequencies
         counter = Counter(all_tokens)
@@ -157,7 +157,7 @@ class GutenbergDownloader:
             writer.writerow(["Rank", "Word", "Frequency"])
             writer.writerows(ranked_words)
 
-        print(f"✅ Word frequencies saved successfully to {output_path}")
+        print(f" Word frequencies saved successfully to {output_path}")
     
 
 
