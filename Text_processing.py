@@ -4,7 +4,6 @@ import string
 import requests
 from tqdm import tqdm
 import nltk
-#nltk.download('punkt')
 from nltk.tokenize import RegexpTokenizer
 from collections import Counter
 import csv
