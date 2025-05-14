@@ -128,7 +128,7 @@ class GutenbergDownloader:
         print(" Calculating word frequencies across all tokenized books...")
         all_tokens = []
 
-        # Read all tokenized files
+        # Read Tokenized file
         for ebook_id in tqdm(self.ebook_ids, desc="Reading tokenized books"):
             tokenized_path = os.path.join(tokenized_dir, f"tokenized_{ebook_id}.txt")
 
@@ -139,13 +139,13 @@ class GutenbergDownloader:
             else:
                 print(f" Tokenized file not found: {tokenized_path}")
 
-        # Count frequencies
+        # Counter for freq
         counter = Counter(all_tokens)
 
-        # Sort by frequency (high to low)
+        # Sort by freq
         most_common = counter.most_common()
 
-        # Add RANK
+        # Add Rank
         ranked_words = [(rank + 1, word, freq) for rank, (word, freq) in enumerate(most_common)]
 
         # Save to CSV
@@ -158,8 +158,44 @@ class GutenbergDownloader:
             writer.writerows(ranked_words)
 
         print(f" Word frequencies saved successfully to {output_path}")
+
     
 
+    def filter_stop_words_luhn(self, tokenized_dir="tokenized_books", filtered_dir="filtered_books", low_freq=3, high_freq_percentile=90):
+    
+      #Apply Luhn's Law to remove stop words based on frequency thresholds.
+
+      
+      os.makedirs(filtered_dir, exist_ok=True)
+      print("Applying Luhn's Law to filter stop words...")
+
+      for ebook_id in tqdm(self.ebook_ids, desc="Filtering books"):
+        tokenized_path = os.path.join(tokenized_dir, f"tokenized_{ebook_id}.txt")
+        filtered_path = os.path.join(filtered_dir, f"filtered_{ebook_id}.txt")
+
+        if os.path.exists(tokenized_path):
+            with open(tokenized_path, "r", encoding="utf-8") as infile:
+                tokens = infile.read().split()
+
+            word_freq = Counter(tokens)
+
+            if not word_freq:
+                continue  # skip empty books
+
+            # Correctly calculate high frequency threshold using percentile
+            freq_values = list(word_freq.values())
+            high_freq_cutoff = np.percentile(freq_values, high_freq_percentile)
+
+            # Filter tokens
+            filtered_tokens = [
+                word for word in tokens
+                if low_freq <= word_freq[word] <= high_freq_cutoff
+            ]
+
+            with open(filtered_path, "w", encoding="utf-8") as outfile:
+                outfile.write(" ".join(filtered_tokens))
+        else:
+            print(f"Tokenized file not found: {tokenized_path}")
 
     def plot_zipfs_law(self):
     # Load your word frequencies
@@ -202,7 +238,7 @@ class GutenbergDownloader:
       plt.tight_layout()
       plt.show()
 
-# Example Usage:
+# Main method to run the code
 if __name__ == "__main__":
     # List of Project Gutenberg ebook IDs
     ebook_ids = [
@@ -213,4 +249,8 @@ if __name__ == "__main__":
     downloader = GutenbergDownloader(ebook_ids)
     #downloader.download_all_books()
     #downloader.clean_all_books()
-    downloader.tokenize_all_books()
+    #downloader.tokenize_all_books()
+    #downloader.calculate_word_frequencies()
+    #downloader.calculate_word_frequencies_csv_file()
+    #downloader.plot_zipfs_law();
+    #downloader.filter_stop_words_luhn()
