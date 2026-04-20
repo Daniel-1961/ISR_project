@@ -21,7 +21,6 @@ This project explores and validates **Zipf's Law** using a collection of text fi
 - `word_frequencies.csv`: Ranked word frequency data used for visualization.
 
 ##  Methodology Steps
-
 1. Download texts from Project Gutenberg.
 2. Clean and preprocess text (punctuation, casing, noise removal).
 3. Tokenize text into words.
@@ -32,6 +31,5 @@ This project explores and validates **Zipf's Law** using a collection of text fi
 ##  Results
 
 The frequency-rank graph aligns with **Zipf's Law**, validating the hypothesis on real-world text data.
-
 ---
 
