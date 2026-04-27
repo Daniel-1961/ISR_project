@@ -7,10 +7,8 @@ This project explores and validates **Zipf's Law** using a collection of text fi
 - The resulting graph demonstrates the expected power-law distribution.
 
 ##  Visualization
-
 - The plot confirming Zipf’s Law is located in the **`notebook_visualization.ipynb`** notebook folder.
 - Check the notebook for step-by-step insights and the final graph.
-
 ##  Project Files
 
 - `scripts`: Contains the **entire codebase** — from text preprocessing to frequency analysis and ranking.
@@ -27,7 +25,6 @@ This project explores and validates **Zipf's Law** using a collection of text fi
 6. Plot Frequency vs. Rank using `matplotlib` and `numpy`.
 
 ##  Results
-
 The frequency-rank graph aligns with **Zipf's Law**, validating the hypothesis on real-world text data.
 ---
 
