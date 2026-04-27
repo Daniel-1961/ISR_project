@@ -1,7 +1,6 @@
 # Zipf's Law Text Analysis Project
 This project explores and validates **Zipf's Law** using a collection of text files sourced from **Project Gutenberg**. Zipf's Law predicts an inverse relationship between a word's frequency and its rank in a corpus.
 ## Project Summary
-
 - Texts from Project Gutenberg were **downloaded, cleaned, preprocessed, and tokenized**.
 - Word frequencies were computed and **ranked**.
 - A **plot of Frequency vs. Rank** was created to visually validate Zipf’s Law.
